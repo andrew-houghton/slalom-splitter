@@ -1,9 +1,9 @@
 import ctypes
+import json
+import sys
 import tkinter
 import tkinter.filedialog
 from pathlib import Path
-import json
-import sys
 
 import vlc
 
@@ -167,7 +167,7 @@ class SlalomSplitter(object):
         # When complete
         if len(self.splits) == len(self.filenames):
             print(json.dumps(self.splits))
-            with open(Path(sys.argv[1]), 'w') as handle:
+            with open(Path(sys.argv[1]), "w") as handle:
                 json.dump(self.splits, handle, indent=2)
                 self.root.destroy()
 
@@ -187,5 +187,7 @@ class SlalomSplitter(object):
 
 
 if __name__ == "__main__":
-    assert sys.argv[1], "A destination json file path as second arg is required. eg. python splitter.py splits.json"
+    assert sys.argv[
+        1
+    ], "A destination json file path as second arg is required. eg. python splitter.py splits.json"
     splitter = SlalomSplitter()
