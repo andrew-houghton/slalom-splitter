@@ -2,6 +2,8 @@ import ctypes
 import tkinter
 import tkinter.filedialog
 from pathlib import Path
+import json
+import sys
 
 import vlc
 
@@ -27,11 +29,6 @@ class SlalomSplitter(object):
 
         self.title = tkinter.Label(self.root, text="Slalom Splitter", font=("Arial 18"))
         self.title.grid(row=1, column=2, columnspan=4)
-
-        self.publish_button = tkinter.Button(
-            self.root, text="Publish", command=self.publish_clicked, state="disabled"
-        )
-        self.publish_button.grid(row=3, column=1)
 
         self.add_files_button = tkinter.Button(
             self.root, text="Select Files", command=self.add_files_clicked
@@ -118,9 +115,6 @@ class SlalomSplitter(object):
 
         self.play_pause_button["state"] = "active"
 
-    def publish_clicked(self):
-        print("publish_clicked")
-
     def play_pause(self):
         if self.player.is_playing():
             self.play_pause_button["text"] = "Play Video"
@@ -166,9 +160,16 @@ class SlalomSplitter(object):
     def run_complete(self):
         file = self.filenames[self.previous_selection[0]]
         print("run_complete", file)
-        self.splits[file] = self.splits_display.get("1.0", "end").strip()
+        self.splits[str(file)] = self.splits_display.get("1.0", "end").strip()
         self.splits_display.delete("1.0", "end")
         self.player.stop()
+
+        # When complete
+        if len(self.splits) == len(self.filenames):
+            print(json.dumps(self.splits))
+            with open(Path(sys.argv[1]), 'w') as handle:
+                json.dump(self.splits, handle, indent=2)
+                self.root.destroy()
 
     def keydown(self, e):
         # Setup keybindings
@@ -186,4 +187,5 @@ class SlalomSplitter(object):
 
 
 if __name__ == "__main__":
+    assert sys.argv[1], "A destination json file path as second arg is required. eg. python splitter.py splits.json"
     splitter = SlalomSplitter()

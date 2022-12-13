@@ -32,3 +32,4 @@ And audio taken from fastest run?
 ## TODO
 
 - rename listbox item to show what is currently selected
+- when run complete is clicked reset pause button state
