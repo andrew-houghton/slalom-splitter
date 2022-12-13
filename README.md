@@ -28,3 +28,7 @@ What text appears on the video?
 What are the splits?
 Probably should be compared to fastest run hey?
 And audio taken from fastest run?
+
+## TODO
+
+- convert start video button into a play/pause button
