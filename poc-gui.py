@@ -1,9 +1,10 @@
-import vlc
+import ctypes
 import tkinter
 
-import ctypes
+import vlc
+
 try:
-    x11 = ctypes.cdll.LoadLibrary('libX11.so')
+    x11 = ctypes.cdll.LoadLibrary("libX11.so")
     x11.XInitThreads()
 except:
     print("Warning: failed to XInitThreads()")
@@ -18,14 +19,16 @@ display.place(relwidth=1, relheight=1)
 
 Instance = vlc.Instance()
 player = Instance.media_player_new()
-Media = Instance.media_new('clips/2022-12-12 Bradys slalom/GH010708.MP4')
+Media = Instance.media_new("clips/2022-12-12 Bradys slalom/GH010708.MP4")
 player.set_xwindow(display.winfo_id())
 player.set_media(Media)
 player.play()
 
 
 def keydown(e):
-    print('down', e.char, player.get_time())
+    print("down", e.char, player.get_time())
+
+
 root.bind("<KeyPress>", keydown)
 
 root.mainloop()

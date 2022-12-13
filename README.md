@@ -31,4 +31,4 @@ And audio taken from fastest run?
 
 ## TODO
 
-- convert start video button into a play/pause button
+- rename listbox item to show what is currently selected
