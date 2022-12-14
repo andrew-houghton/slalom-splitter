@@ -29,7 +29,11 @@ What are the splits?
 Probably should be compared to fastest run hey?
 And audio taken from fastest run?
 
-## TODO
+## TODO splitter
 
 - rename listbox item to show what is currently selected
 - when run complete is clicked reset pause button state
+
+## TODO renderer
+
+- change FPS back to 30
