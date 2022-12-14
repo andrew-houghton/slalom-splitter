@@ -46,7 +46,7 @@ def parse_splits_string(value):
 
 with open(Path(sys.argv[1]), "r") as handle:
     data = json.load(handle)
-    data = {k: parse_splits_string(v)[:8] for k,v in data.items()}
+    data = {k: parse_splits_string(v) for k,v in data.items()}
 
 def calculate_run_duration(parsed_splits):
     # Ignore penalties
@@ -83,40 +83,43 @@ def make_timer(t):
         fontfamily="Impact",
         fontsize=60,
         fill=(1, 1, 1),
-        xy=(total_width/2, 64),
+        xy=(total_width/2, 32),
     )
     text.draw(surface)
 
-    # For clips[1]
+    # Add overall split diff for each run
+    # Fastest will always show 0
     if real_time > 0:
-        position = (0, 1)
-        splits = data[runs_by_speed[1]]
-        splits = [i[0] - splits[0][0] for i in splits]
         fastest_splits = data[runs_by_speed[0]]
         fastest_splits = [i[0] - fastest_splits[0][0] for i in fastest_splits]
+        for j in range(len(clips)):
+            position = (j // len(clips_grid[0]), j % len(clips_grid[0]))
 
-        last_gate_completed = 0
-        for i in range(len(splits)):
-            if real_time > splits[i]:
-                last_gate_completed = i
-            else:
-                break
+            splits = data[runs_by_speed[j]]
+            splits = [i[0] - splits[0][0] for i in splits]
 
-        time_last_gate = splits[last_gate_completed]
-        fastest_last_gate = fastest_splits[last_gate_completed]
-        overall_split_time = time_last_gate - fastest_last_gate
+            last_gate_completed = 0
+            for i in range(len(splits)):
+                if real_time > splits[i]:
+                    last_gate_completed = i
+                else:
+                    break
 
-        overall_split_text = gizeh.text(
-            str(round(overall_split_time, 1)) + 's',
-            fontfamily="Impact",
-            fontsize=40,
-            fill=(1, 1, 1),
-            xy=(
-                position[1] * clips[0].size[0] + clips[0].size[0] * 0.5,
-                (1 + position[0]) * clips[0].size[1] - 192,
-            ),
-        )
-        overall_split_text.draw(surface)
+            time_last_gate = splits[last_gate_completed]
+            fastest_last_gate = fastest_splits[last_gate_completed]
+            overall_split_time = time_last_gate - fastest_last_gate
+
+            overall_split_text = gizeh.text(
+                str(round(overall_split_time, 1)) + 's',
+                fontfamily="Impact",
+                fontsize=40,
+                fill=(1, 1, 1),
+                xy=(
+                    position[1] * clips[0].size[0] + clips[0].size[0] * 0.5,
+                    (1 + position[0]) * clips[0].size[1] - 64,
+                ),
+            )
+            overall_split_text.draw(surface)
 
     return surface.get_npimage(transparent=True)  # returns a 8-bit RGB array
 
