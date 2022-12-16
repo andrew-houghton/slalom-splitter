@@ -171,5 +171,5 @@ countdown = VideoClip(lambda t: make_timer(t)[:, :, :3], duration=total_duration
 
 joined_clips = clips_array(clips_grid, [countdown])
 start = time.perf_counter()
-joined_clips.write_videofile("clips/output.mp4", fps=60)
+joined_clips.write_videofile("clips/output.mp4", fps=30)
 print(f"finished writing video in {time.perf_counter() - start:.1f}s")

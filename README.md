@@ -18,18 +18,9 @@ TODO
 1. Select clip again (allowed to redo completed)
 1. Render video
 
-## Technical problems to solve
-
-- start vlc, record keypresses during vlc, get accurate timestamps
-
-Other things to plan
-
-What text appears on the video?
-What are the splits?
-Probably should be compared to fastest run hey?
-And audio taken from fastest run?
-
-## TODO splitter
+## TODO
 
 - rename listbox item to show what is currently selected
 - when run complete is clicked reset pause button state
+- update listbox as splits are added
+- show peanalties
