@@ -33,7 +33,3 @@ And audio taken from fastest run?
 
 - rename listbox item to show what is currently selected
 - when run complete is clicked reset pause button state
-
-## TODO renderer
-
-- change FPS back to 30

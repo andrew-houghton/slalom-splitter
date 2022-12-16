@@ -50,13 +50,15 @@ with open(Path(sys.argv[1]), "r") as handle:
 
 def calculate_run_duration(parsed_splits):
     # Ignore penalties
-    return parsed_splits[-1][0] + parsed_splits[0][0]
+    return parsed_splits[-1][0] - parsed_splits[0][0]
 
 run_durations = {k: calculate_run_duration(v) for k,v in data.items()}
 runs_by_speed = sorted(run_durations, key=lambda file: run_durations[file])
 
-def load_clip_with_buffer(file, start, end, buffer=2):
-    return VideoFileClip(file).subclip(start-buffer, end).resize(0.5)
+start_time_offset = 2
+
+def load_clip_with_buffer(file, start, end, buffer=start_time_offset):
+    return VideoFileClip(file).subclip(start-buffer, end+3).resize(0.5)
 
 
 clips = [load_clip_with_buffer(file, data[file][0][0], data[file][-1][0]) for file in runs_by_speed]
@@ -77,15 +79,17 @@ print(total_height, total_width)
 
 def make_timer(t):
     surface = gizeh.Surface(height=total_height, width=total_width)
-    real_time = t - 2
+    real_time = t - start_time_offset
     text = gizeh.text(
-        str(round(t - 2, 1)) + 's',
+        str(round(t - start_time_offset, 1)) + 's',
         fontfamily="Impact",
         fontsize=60,
         fill=(1, 1, 1),
         xy=(total_width/2, 32),
     )
     text.draw(surface)
+    red_fill = (1,0,0)
+    green_fill = (0,1,0)
 
     # Add overall split diff for each run
     # Fastest will always show 0
@@ -109,17 +113,55 @@ def make_timer(t):
             fastest_last_gate = fastest_splits[last_gate_completed]
             overall_split_time = time_last_gate - fastest_last_gate
 
-            overall_split_text = gizeh.text(
-                str(round(overall_split_time, 1)) + 's',
+            overall_split_label = gizeh.text(
+                "Overall",
                 fontfamily="Impact",
                 fontsize=40,
                 fill=(1, 1, 1),
                 xy=(
-                    position[1] * clips[0].size[0] + clips[0].size[0] * 0.5,
+                    position[1] * clips[0].size[0] + clips[0].size[0] * 0.35,
+                    (1 + position[0]) * clips[0].size[1] - 100,
+                ),
+            )
+            overall_split_label.draw(surface)
+            overall_split_text = gizeh.text(
+                f"{overall_split_time:.1f}s",
+                fontfamily="Impact",
+                fontsize=40,
+                fill=green_fill if overall_split_time <= 0 else red_fill,
+                xy=(
+                    position[1] * clips[0].size[0] + clips[0].size[0] * 0.35,
                     (1 + position[0]) * clips[0].size[1] - 64,
                 ),
             )
             overall_split_text.draw(surface)
+
+            if last_gate_completed >= 1:
+                time_diff_gate = splits[last_gate_completed - 1] - splits[last_gate_completed]
+                fastest_diff_gate = fastest_splits[last_gate_completed - 1] - fastest_splits[last_gate_completed]
+                gate_split_time = fastest_diff_gate - time_diff_gate
+                gate_split_label = gizeh.text(
+                    "Gate",
+                    fontfamily="Impact",
+                    fontsize=40,
+                    fill=(1, 1, 1),
+                    xy=(
+                        position[1] * clips[0].size[0] + clips[0].size[0] * 0.65,
+                        (1 + position[0]) * clips[0].size[1] - 100,
+                    ),
+                )
+                gate_split_label.draw(surface)
+                gate_split_text = gizeh.text(
+                    f"{gate_split_time:.1f}s",
+                    fontfamily="Impact",
+                    fontsize=40,
+                    fill=green_fill if gate_split_time <= 0 else red_fill,
+                    xy=(
+                        position[1] * clips[0].size[0] + clips[0].size[0] * 0.65,
+                        (1 + position[0]) * clips[0].size[1] - 64,
+                    ),
+                )
+                gate_split_text.draw(surface)
 
     return surface.get_npimage(transparent=True)  # returns a 8-bit RGB array
 
@@ -129,5 +171,5 @@ countdown = VideoClip(lambda t: make_timer(t)[:, :, :3], duration=total_duration
 
 joined_clips = clips_array(clips_grid, [countdown])
 start = time.perf_counter()
-joined_clips.write_videofile("clips/output.mp4", fps=30)
+joined_clips.write_videofile("clips/output.mp4", fps=60)
 print(f"finished writing video in {time.perf_counter() - start:.1f}s")
