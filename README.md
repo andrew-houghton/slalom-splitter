@@ -6,7 +6,11 @@ First use the splitter to record the gate times, then use the renderer to make a
 
 ## Dependecies
 
-python packages `pip install -r requirements.txt`
+- linux (not yet tested on windows)
+- python packages `pip install -r requirements.txt`
+- ffmpeg
+- vlc
+- imagemagik
 
 ## Splitter usage
 
