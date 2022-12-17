@@ -1,5 +1,15 @@
 A tool for showing multiple slalom runs in an edited video at the same time.
 
+## Screenshots
+
+**Tool for recroding splits**
+
+![Tool to set splits](readme_splitter.png "Splits Tool")
+
+**Finished Video**
+
+![Finished Video](readme_renderer.png "Rendered Video")
+
 ## Usage/ setup/ installation
 
 First use the splitter to record the gate times, then use the renderer to make a video.
@@ -40,13 +50,3 @@ First use the splitter to record the gate times, then use the renderer to make a
 - show peanalties
 - Fix play video button after run complete
 - Support layouts other than 5 clips
-
-## Screenshots
-
-**Tool for recroding splits**
-
-![Tool to set splits](readme_splitter.png "Splits Tool")
-
-**Finished Video**
-
-![Finished Video](readme_renderer.png "Rendered Video")
