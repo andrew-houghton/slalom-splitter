@@ -39,5 +39,10 @@ python packages `pip install -r requirements.txt`
 
 ## Screenshots
 
+**Tool for recroding splits**
+
 ![Tool to set splits](readme_splitter.png "Splits Tool")
+
+**Finished Video**
+
 ![Finished Video](readme_renderer.png "Rendered Video")
